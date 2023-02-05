@@ -1,3 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const requestAPI = axios.create({baseURL: "http://localhost:5000"})
+var port = 5000;
+var url = `http://localhost:/${port}`;
+export const requestAPI = axios.create({
+  baseURL: url,
+});

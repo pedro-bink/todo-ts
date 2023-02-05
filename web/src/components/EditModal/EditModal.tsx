@@ -21,6 +21,7 @@ const DialogDemo = ({ row, updateTask }: Props) => {
       title: title,
       description: description,
       status: status === 1 ? true : false,
+      date: new Date(),
     };
     updateTask(task, id);
   };

@@ -2,7 +2,12 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import './styles.css';
 import { Trash } from 'phosphor-react';
 
-const AlertDialogDemo = ({ id, deleteTask }) => (
+type Props = {
+  id: string;
+  deleteTask: (id: string) => void;
+};
+
+const AlertDialogDemo = ({ id, deleteTask }: Props) => (
   <AlertDialog.Root>
     <AlertDialog.Trigger asChild>
       <Trash className="hover:text-red-700 cursor-pointer" size={32} />

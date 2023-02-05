@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-var url = `http://localhost:5000`;
+var url = `https://todo-ts-be.up.railway.app`;
 export const requestAPI = axios.create({
   baseURL: url,
 });

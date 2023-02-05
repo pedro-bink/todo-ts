@@ -24,7 +24,7 @@ type Props = {
 export const TodoContext = createContext<TodoContextType | null>(null);
 
 export function TodoProvider({ children }: Props) {
-  const api = 'http://localhost:5000';
+  const api = 'https://todo-ts-be.up.railway.app';
   const fetcher: Fetcher<ITodo[] | undefined> = (url: string) =>
     fetch(url).then((res) => res.json());
 

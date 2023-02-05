@@ -6,6 +6,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// use port 5000 unless there exists a preconfigured port
+var port = process.env.PORT || 5000;
+
 app.get('/tasks', async (req, res) => {
   const tasks = await prisma.task.findMany({
     orderBy: {
@@ -65,6 +68,6 @@ app.put('/tasks/:id', async (req, res) => {
   res.status(200).json();
 });
 
-app.listen(5000, () => {
+app.listen(port, () => {
   console.log('Server is running on http://localhost:5000');
 });

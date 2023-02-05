@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-var port = 5000;
-var url = `http://localhost:/${port}`;
+var url = `http://localhost:5000`;
 export const requestAPI = axios.create({
   baseURL: url,
 });

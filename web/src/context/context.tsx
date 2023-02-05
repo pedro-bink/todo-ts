@@ -28,7 +28,6 @@ export function TodoProvider({ children }: Props) {
   const fetcher: Fetcher<ITodo[] | undefined> = (url: string) =>
     fetch(url).then((res) => res.json());
 
-  // const fetcher: Fetcher<ITodo, ITodo> = (id) => getUserById(id);
   const { data, error, isLoading, mutate } = useSWR(`${api}/tasks`, fetcher);
 
   const createTask = async (todo: ITodo) => {

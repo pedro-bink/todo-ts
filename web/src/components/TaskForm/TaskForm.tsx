@@ -13,7 +13,6 @@ const TaskForm = (props: Props) => {
   const { createTask } = useContextTodo();
   const onSubmit = (data: any) => {
     reset();
-    console.log(data);
     createTask(data);
   };
 

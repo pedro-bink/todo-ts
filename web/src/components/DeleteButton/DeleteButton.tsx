@@ -16,14 +16,14 @@ const AlertDialogDemo = ({ id, deleteTask }: Props) => (
       <AlertDialog.Overlay className="AlertDialogOverlay" />
       <AlertDialog.Content className="AlertDialogContent">
         <AlertDialog.Title className="AlertDialogTitle">
-          Você tem certeza?
+          Are you sure about this?
         </AlertDialog.Title>
         <AlertDialog.Description className="AlertDialogDescription">
-          Ao confirmar essa task será excluida!
+          On submit this task's gonna be deleted!
         </AlertDialog.Description>
         <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
           <AlertDialog.Cancel asChild>
-            <button className="Button mauve">Cancelar</button>
+            <button className="Button mauve">Cancel</button>
           </AlertDialog.Cancel>
           <AlertDialog.Action asChild>
             <button
@@ -32,7 +32,7 @@ const AlertDialogDemo = ({ id, deleteTask }: Props) => (
                 deleteTask(id);
               }}
             >
-              Deletar
+              Delete
             </button>
           </AlertDialog.Action>
         </div>

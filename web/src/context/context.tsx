@@ -55,17 +55,20 @@ export function TodoProvider({ children }: Props) {
   const { data, error, isLoading, mutate } = useSWR(`${api}/tasks`, fetcher);
 
   useEffect(() => {
-    const authenticated = Cookies.get('authentication');
-    if (authenticated) {
+    if (Cookies.get('authentication') === 'false') {
+      setAuthentication(false);
+      navigate('/');
+    } else {
       setAuthentication(true);
+      navigate('/todo');
     }
   }, []);
 
   const createTask = async (todo: ITodo) => {
     const newTodo: ITodo = {
+      userId: Cookies.get('userId'),
       title: todo.title,
       description: todo.description,
-      status: false,
     };
     await requestAPI.post('/tasks', newTodo);
     mutate();
@@ -87,9 +90,9 @@ export function TodoProvider({ children }: Props) {
       email: user.email,
       password: user.password,
     };
-    const response = await requestAPI.post('/users', newUser);
+    const response = await requestAPI.post('/register', newUser);
     if (response.status === 201) {
-      navigate('/login');
+      navigate('/');
     }
   };
 
@@ -100,9 +103,10 @@ export function TodoProvider({ children }: Props) {
     };
     const response = await requestAPI.post('/login', loginRequest);
 
-    if (response.data.jwtFake) {
+    if (response.data) {
       Cookies.set('userId', response.data.userId);
       Cookies.set('jwtFake', response.data.jwtFake);
+      Cookies.set('name', response.data.name);
       Cookies.set('authentication', 'true');
       setAuthentication(true);
       navigate('/todo');

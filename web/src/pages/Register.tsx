@@ -17,7 +17,7 @@ const Register = (props: Props) => {
 
   const onSubmit = (data: any) => {
     createUser(data);
-    // reset();
+    reset();
   };
 
   return (
@@ -30,7 +30,7 @@ const Register = (props: Props) => {
             className="flex flex-col gap-5 p-10 w-[600px]"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h1 className="text-4xl w-[100%] relative top-[-30px] text-left">
+            <h1 className="text-3xl relative top-[-20px] font-bold text-sky-900">
               Register here
             </h1>
             <div className="flex flex-col gap-2">

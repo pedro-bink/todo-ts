@@ -17,7 +17,6 @@ const DialogDemo = ({ row, updateTask }: Props) => {
 
   const handleSubmit = (id: string) => {
     const task = {
-      id: '',
       title: title,
       description: description,
       status: status === 1 ? true : false,
@@ -36,9 +35,9 @@ const DialogDemo = ({ row, updateTask }: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="DialogContent">
-          <Dialog.Title className="DialogTitle">Editar task</Dialog.Title>
+          <Dialog.Title className="DialogTitle">Edite task</Dialog.Title>
           <Dialog.Description className="DialogDescription">
-            Preencha as informações que deseja editar
+            Edit the information you want
           </Dialog.Description>
           <fieldset className="Fieldset">
             <label className="Label" htmlFor="title">
@@ -62,7 +61,7 @@ const DialogDemo = ({ row, updateTask }: Props) => {
               name="status"
               id="status"
               className="Select"
-              defaultValue={0}
+              defaultValue={status}
               onChange={(e) => {
                 setStatus(Number(e.target.value));
               }}

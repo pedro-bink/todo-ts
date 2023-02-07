@@ -15,7 +15,7 @@ import EditModal from '../EditModal/EditModal';
 type Props = {};
 
 const TaskList = (props: Props) => {
-  const { data, setUserTasks, updateTask, deleteTask } = useContextTodo();
+  const { data, updateTask, deleteTask } = useContextTodo();
 
   interface Column {
     id: 'title' | 'status' | 'description' | 'actions';
@@ -84,7 +84,7 @@ const TaskList = (props: Props) => {
                       <div className="flex gap-5">
                         <div className="content-center border-black ">
                           <DeleteButton
-                            id={userTasksFiltered.id}
+                            id={userTasksFiltered.id!}
                             deleteTask={deleteTask}
                           />
                         </div>

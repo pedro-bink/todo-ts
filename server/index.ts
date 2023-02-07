@@ -26,7 +26,6 @@ app.get("/tasks", (req, res) => {
 
 app.post("/tasks", (req, res) => {
   const task = req.body;
-  console.log(task);
   if (!task.title || !task.description || !task.userId) {
     res.status(400).json({
       error: "Bad request",
@@ -79,21 +78,25 @@ app.put("/tasks/:id", async (req, res) => {
   res.status(200).json();
 });
 
-app.post("/users", async (req, res) => {
+app.post("/register", async (req, res) => {
   const user = req.body;
-  if (!user.email || !user.password) {
+  try {
+    if (!user.email || !user.password) {
+      throw new Error("Invalid credentials");
+    }
+    const response = await prisma.user.create({
+      data: {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      },
+    });
+    res.status(201).json(response);
+  } catch (error) {
     res.status(400).json({
       error: "Bad request",
     });
   }
-  const response = await prisma.user.create({
-    data: {
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    },
-  });
-  res.status(201).json(response);
 });
 
 app.post("/login", async (req, res) => {
@@ -119,9 +122,9 @@ app.post("/login", async (req, res) => {
     } else {
       res.status(404).json("User not found");
     }
-    } else {
-      res.status(404).json("User not found");
-    }
+  } else {
+    res.status(404).json("User not found");
+  }
 });
 
 app.listen(port, host, () => {

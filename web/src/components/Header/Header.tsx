@@ -1,11 +1,47 @@
-import React from 'react'
+import Cookies from 'js-cookie';
+import { SignOut } from 'phosphor-react';
+import { useNavigate } from 'react-router-dom';
+import { useContextTodo } from '../../context/context';
 
-type Props = {}
+type Props = {};
 
 const Header = (props: Props) => {
-  return (
-    <div className="h-20 flex justify-center items-center bg-custom-bg-blue text-custom-text-blue text-4xl">React + TS Todo List</div>
-  )
-}
+  const { setAuthentication, authentication } = useContextTodo();
+  const handleLogout = () => {
+    Cookies.remove('authentication');
+    setAuthentication(false);
+  };
 
-export default Header
+  const navigate = useNavigate();
+
+  return (
+    <div className="h-20 flex justify-around items-center bg-custom-bg-blue text-custom-text-blue ">
+      {authentication && (
+        <div className=" w-[10%] flex justify-center items-center">
+          <p>Welcome, {Cookies.get('name')}!</p>
+        </div>
+      )}
+
+      <div className=" w-[80%]  flex justify-center items-center">
+        <h1
+          className="text-3xl cursor-pointer"
+          onClick={() => navigate('/todo')}
+        >
+          React + TS Todo List
+        </h1>
+      </div>
+
+      {authentication && (
+        <div className="w-[10%] flex justify-center items-center ">
+          <SignOut
+            className="cursor-pointer"
+            size={32}
+            onClick={handleLogout}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Header;

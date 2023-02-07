@@ -1,5 +1,5 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
 import { useContextTodo } from '../context/context';
@@ -20,6 +20,8 @@ const Login = (props: Props) => {
     reset();
   };
 
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="flex flex-col justify-between">
@@ -30,8 +32,8 @@ const Login = (props: Props) => {
             className="flex flex-col gap-5 p-10 w-[600px]"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h1 className="text-4xl w-[100%] relative top-[-30px] text-left">
-              Do log-in to use the todo list
+            <h1 className="text-3xl relative top-[-20px] font-bold text-sky-900">
+              Log-in to use the todo list
             </h1>
 
             <div className="flex flex-col gap-2">
@@ -69,6 +71,16 @@ const Login = (props: Props) => {
               />
             </div>
           </form>
+          <p>
+            Don't you already have an account?{' '}
+            <span
+              className="font-bold cursor-pointer"
+              onClick={() => navigate('/register')}
+            >
+              {' '}
+              register now!{' '}
+            </span>
+          </p>
         </div>
         <Footer />
       </div>

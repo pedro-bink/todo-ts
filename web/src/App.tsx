@@ -1,14 +1,17 @@
 import './App.css';
 import { TodoProvider } from './context/context';
-import Home from './pages/Home';
+import Rotas from './Rotas';
+import { BrowserRouter, Outlet } from 'react-router-dom';
 
 function App() {
   return (
-    <TodoProvider>
-      <div>
-        <Home />
-      </div>
-    </TodoProvider>
+    <BrowserRouter>
+      <TodoProvider>
+        <div className="bg-custom-bg">
+          <Rotas />
+        </div>
+      </TodoProvider>
+    </BrowserRouter>
   );
 }
 

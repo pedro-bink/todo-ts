@@ -1,20 +1,38 @@
-import { useContext, createContext } from 'react';
-import { requestAPI } from '../lib/Axios';
+import { useContext, createContext, useState, useEffect } from 'react';
+import { requestAPI } from '../services/Axios';
 import useSWR, { Fetcher } from 'swr';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export interface ITodo {
-  id: string;
+  id?: string;
   title: string;
-  status: boolean;
+  status?: boolean;
   description: string;
-  date: Date;
+  userId?: string;
+}
+export interface IUser {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
 }
 
 type TodoContextType = {
   data: ITodo[] | undefined;
+  authentication: boolean;
+  userTasks: ITodo[] | undefined;
+  setAuthentication: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserTasks: React.Dispatch<React.SetStateAction<ITodo[] | undefined>>;
   createTask: (todo: ITodo) => void;
   updateTask: (task: ITodo, id: string) => void;
   deleteTask: (id: string) => void;
+  createUser: (user: IUser) => Promise<void>;
+  Login: (user: ILogin) => Promise<void>;
 };
 
 type Props = {
@@ -24,18 +42,29 @@ type Props = {
 export const TodoContext = createContext<TodoContextType | null>(null);
 
 export function TodoProvider({ children }: Props) {
-  const api = 'https://todo-ts-be.up.railway.app';
-  const fetcher: Fetcher<ITodo[] | undefined> = (url: string) =>
-    fetch(url).then((res) => res.json());
+  const navigate = useNavigate();
+  const [authentication, setAuthentication] = useState<boolean>(false);
+  const [userTasks, setUserTasks] = useState<ITodo[]>();
+
+  const api = 'http://localhost:3000';
+  const fetcher: Fetcher<ITodo[] | undefined> = () =>
+    requestAPI.get('/tasks').then((response) => {
+      return response.data;
+    });
 
   const { data, error, isLoading, mutate } = useSWR(`${api}/tasks`, fetcher);
 
+  useEffect(() => {
+    const authenticated = Cookies.get('authentication');
+    if (authenticated) {
+      setAuthentication(true);
+    }
+  }, []);
+
   const createTask = async (todo: ITodo) => {
     const newTodo: ITodo = {
-      date: new Date(),
       title: todo.title,
       description: todo.description,
-      id: '',
       status: false,
     };
     await requestAPI.post('/tasks', newTodo);
@@ -52,8 +81,49 @@ export function TodoProvider({ children }: Props) {
     mutate();
   };
 
+  const createUser = async (user: IUser) => {
+    const newUser: IUser = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    };
+    const response = await requestAPI.post('/users', newUser);
+    if (response.status === 201) {
+      navigate('/login');
+    }
+  };
+
+  const Login = async (user: ILogin) => {
+    const loginRequest: ILogin = {
+      email: user.email,
+      password: user.password,
+    };
+    const response = await requestAPI.post('/login', loginRequest);
+
+    if (response.data.jwtFake) {
+      Cookies.set('userId', response.data.userId);
+      Cookies.set('jwtFake', response.data.jwtFake);
+      Cookies.set('authentication', 'true');
+      setAuthentication(true);
+      navigate('/todo');
+    }
+  };
+
   return (
-    <TodoContext.Provider value={{ data, createTask, updateTask, deleteTask }}>
+    <TodoContext.Provider
+      value={{
+        data,
+        authentication,
+        userTasks,
+        setAuthentication,
+        setUserTasks,
+        createTask,
+        updateTask,
+        deleteTask,
+        createUser,
+        Login,
+      }}
+    >
       {children}
     </TodoContext.Provider>
   );

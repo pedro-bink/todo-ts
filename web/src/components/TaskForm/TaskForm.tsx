@@ -13,6 +13,7 @@ const TaskForm = (props: Props) => {
   const { createTask } = useContextTodo();
   const onSubmit = (data: any) => {
     reset();
+    console.log(data);
     createTask(data);
   };
 
@@ -55,7 +56,7 @@ const TaskForm = (props: Props) => {
         <div>
           <input
             type="submit"
-            value="Salvar"
+            value="Submit"
             className="w-full cursor-pointer   text-center border font-semibold text-black bg-custom-bg-lightBlue rounded h-10"
           />
         </div>

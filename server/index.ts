@@ -18,26 +18,25 @@ app.get("/tasks", async (req, res) => {
   res.status(200).json(tasks);
 });
 
-app.post("/tasks", (req, res) => {
+app.post("/tasks", async (req, res) => {
   const task = req.body;
   if (!task.title || !task.description || !task.userId) {
     res.status(400).json({
       error: "Bad request",
     });
   }
-  prisma.task
-    .create({
-      data: {
-        title: task.title,
-        description: task.description,
-        User: {
-          connect: {
-            id: task.userId,
-          },
+  const taskCreated = await prisma.task.create({
+    data: {
+      title: task.title,
+      description: task.description,
+      User: {
+        connect: {
+          id: task.userId,
         },
       },
-    })
-    .then((response) => res.status(201).json(response));
+    },
+  });
+  res.status(201).json(taskCreated);
 });
 
 app.delete("/tasks/:id", async (req, res) => {

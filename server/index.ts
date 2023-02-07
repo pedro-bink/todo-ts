@@ -9,19 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/tasks", (req, res) => {
-  prisma.task
-    .findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    })
-    .then((tasks) => {
-      res.status(200).json(tasks);
-    })
-    .catch((error) => {
-      res.status(500).send(error.message);
-    });
+app.get("/tasks", async (req, res) => {
+  const tasks = await prisma.task.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  res.status(200).json(tasks);
 });
 
 app.post("/tasks", (req, res) => {

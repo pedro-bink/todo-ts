@@ -41,18 +41,22 @@ app.post("/tasks", async (req, res) => {
 
 app.delete("/tasks/:id", async (req, res) => {
   const { id } = req.params;
-  const task = await prisma.task.findUnique({
-    where: { id: id },
-  });
-  if (!task) {
+  try {
+    const task = await prisma.task.findUnique({
+      where: { id: id },
+    });
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    await prisma.task.delete({
+      where: { id: id },
+    });
+    res.status(200);
+  } catch (error) {
     res.status(404).json({
-      error: "Task not found",
+      error: "Task has not been deleted!",
     });
   }
-  await prisma.task.delete({
-    where: { id: id },
-  });
-  res.status(200).json();
 });
 
 app.put("/tasks/:id", async (req, res) => {

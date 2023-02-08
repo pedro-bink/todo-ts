@@ -95,7 +95,7 @@ const DialogDemo = ({ row, updateTask }: Props) => {
               <button
                 className="Button green"
                 onClick={() => {
-                  handleSubmit(row.id);
+                  handleSubmit(row.id!);
                 }}
               >
                 Save changes

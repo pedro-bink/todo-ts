@@ -6,10 +6,9 @@ import { useContextTodo } from '../../context/context';
 type Props = {};
 
 const Header = (props: Props) => {
-  const { setAuthentication, authentication } = useContextTodo();
+  const { setAuthentication, authentication, logout } = useContextTodo();
   const handleLogout = () => {
-    Cookies.remove('authentication');
-    setAuthentication(false);
+    logout();
   };
 
   const navigate = useNavigate();
@@ -25,7 +24,7 @@ const Header = (props: Props) => {
       <div className="flex justify-center items-center ">
         <h1
           className="cursor-pointer text-base md:text-2xl"
-          onClick={() => navigate('/todo')}
+          onClick={() => navigate('/')}
         >
           React + TS Todo List
         </h1>

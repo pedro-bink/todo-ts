@@ -3,14 +3,17 @@ import { useContextTodo } from '../context/context';
 
 type Props = {
   route?: string;
+  inverse?: boolean;
 };
 
 const ProtectedRoute = ({ route = '/' }: Props) => {
   const { authentication } = useContextTodo();
+  console.log(authentication);
   if (!authentication) {
-    return <Navigate to={route} replace />;
+    return <Navigate to={route} />;
+  } else {
+    return <Outlet />;
   }
-  return <Outlet />;
 };
 
 export default ProtectedRoute;

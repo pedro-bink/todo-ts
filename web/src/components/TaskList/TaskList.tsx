@@ -6,17 +6,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useContextTodo } from '../../context/context';
+import useFetchTasks from '../../services/useFetchTasks';
 import DeleteButton from '../DeleteButton/DeleteButton';
 import EditModal from '../EditModal/EditModal';
 
 type Props = {};
 
 const TaskList = (props: Props) => {
-  const { data, updateTask, deleteTask } = useContextTodo();
-
+  const { updateTask, deleteTask } = useContextTodo();
+  const { tasks, isLoading, error } = useFetchTasks();
   interface Column {
     id: 'title' | 'status' | 'description' | 'actions';
     label: string;
@@ -37,10 +37,6 @@ const TaskList = (props: Props) => {
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-
-  let userTasksFiltered = data?.filter((task) => {
-    return task.userId == Cookies.get('userId');
-  });
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -71,28 +67,25 @@ const TaskList = (props: Props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {userTasksFiltered
+              {tasks
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((userTasksFiltered, i) => (
+                .map((tasks, i) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
-                    <TableCell>{userTasksFiltered.title}</TableCell>
+                    <TableCell>{tasks.title}</TableCell>
                     <TableCell>
-                      {userTasksFiltered?.status ? 'Complete' : 'Incomplete'}
+                      {tasks?.status ? 'Complete' : 'Incomplete'}
                     </TableCell>
-                    <TableCell>{userTasksFiltered.description}</TableCell>
+                    <TableCell>{tasks.description}</TableCell>
                     <TableCell>
                       <div className="flex gap-5">
                         <div className="content-center border-black ">
                           <DeleteButton
-                            id={userTasksFiltered.id!}
+                            id={tasks.id!}
                             deleteTask={deleteTask}
                           />
                         </div>
                         <div className="content-center border-black ">
-                          <EditModal
-                            row={userTasksFiltered}
-                            updateTask={updateTask}
-                          />
+                          <EditModal row={tasks} updateTask={updateTask} />
                         </div>
                       </div>
                     </TableCell>
@@ -105,7 +98,7 @@ const TaskList = (props: Props) => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={userTasksFiltered?.length || 0}
+          count={tasks?.length || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

@@ -1,8 +1,8 @@
 import { useContext, createContext, useState, useEffect } from 'react';
 import { requestAPI } from '../services/Axios';
-import useSWR, { Fetcher } from 'swr';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import useFetchTasks from '../services/useFetchTasks';
 
 export interface ITodo {
   id?: string;
@@ -11,6 +11,7 @@ export interface ITodo {
   description: string;
   userId?: string;
 }
+
 export interface IUser {
   name: string;
   email: string;
@@ -23,16 +24,17 @@ export interface ILogin {
 }
 
 type TodoContextType = {
-  data: ITodo[] | undefined;
   authentication: boolean;
   userTasks: ITodo[] | undefined;
+  userId: String;
   setAuthentication: React.Dispatch<React.SetStateAction<boolean>>;
   setUserTasks: React.Dispatch<React.SetStateAction<ITodo[] | undefined>>;
   createTask: (todo: ITodo) => void;
   updateTask: (task: ITodo, id: string) => void;
   deleteTask: (id: string) => void;
   createUser: (user: IUser) => Promise<void>;
-  Login: (user: ILogin) => Promise<void>;
+  login: (user: ILogin) => Promise<void>;
+  logout: () => void;
 };
 
 type Props = {
@@ -40,29 +42,24 @@ type Props = {
 };
 
 export const TodoContext = createContext<TodoContextType | null>(null);
-
 export function TodoProvider({ children }: Props) {
   const navigate = useNavigate();
   const [authentication, setAuthentication] = useState<boolean>(false);
   const [userTasks, setUserTasks] = useState<ITodo[]>();
-
-  const api = 'http://localhost:1/2400';
-  const fetcher: Fetcher<ITodo[] | undefined> = () =>
-    requestAPI.get('/tasks').then((response) => {
-      return response.data;
-    });
-
-  const { data, mutate } = useSWR(`${api}/tasks`, fetcher);
+  const [userId, setUserId] = useState<String>('');
+  const { mutate } = useFetchTasks();
 
   useEffect(() => {
-    if (Cookies.get('authentication') === 'false') {
-      setAuthentication(false);
-      navigate('/');
-    } else {
+    if (Cookies.get('authentication')) {
       setAuthentication(true);
-      navigate('/todo');
+      navigate('/');
+      console.log('caiu n');
+    } else {
+      console.log('caiu');
+      setAuthentication(false);
+      navigate('/login');
     }
-  }, []);
+  }, [Cookies.get('authentication'), authentication]);
 
   const createTask = async (todo: ITodo) => {
     const newTodo: ITodo = {
@@ -96,7 +93,7 @@ export function TodoProvider({ children }: Props) {
     }
   };
 
-  const Login = async (user: ILogin) => {
+  const login = async (user: ILogin) => {
     const loginRequest: ILogin = {
       email: user.email,
       password: user.password,
@@ -104,31 +101,48 @@ export function TodoProvider({ children }: Props) {
     const response = await requestAPI.post('/login', loginRequest);
 
     if (response.data) {
-      var date = new Date();
+      setUserId(response.data.userId);
+      var expirationTime = new Date(new Date().getTime() + 60 * (60 * 1000));
       Cookies.set('userId', response.data.userId, {
-        expires: date.getTime() + 30 * 1000,
+        expires: expirationTime,
       });
-      Cookies.set('jwtFake', response.data.jwtFake, { expires: 600 });
-      Cookies.set('name', response.data.name, { expires: 600 });
-      Cookies.set('authentication', 'true', { expires: 600 });
+      Cookies.set('jwtFake', response.data.jwtFake, {
+        expires: expirationTime,
+      });
+      Cookies.set('name', response.data.name, {
+        expires: expirationTime,
+      });
+      Cookies.set('authentication', 'true', {
+        expires: expirationTime,
+      });
       setAuthentication(true);
-      navigate('/todo');
+      navigate('/');
     }
+  };
+
+  const logout = () => {
+    Cookies.remove('authentication');
+    Cookies.remove('userId');
+    Cookies.remove('name');
+    Cookies.remove('jwtFake');
+    setAuthentication(false);
+    navigate('/');
   };
 
   return (
     <TodoContext.Provider
       value={{
-        data,
         authentication,
         userTasks,
+        userId,
         setAuthentication,
         setUserTasks,
         createTask,
         updateTask,
         deleteTask,
         createUser,
-        Login,
+        login,
+        logout,
       }}
     >
       {children}

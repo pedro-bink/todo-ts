@@ -7,10 +7,11 @@ import Login from './pages/Login';
 const Rotas = () => {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/todo" element={<Todo />} />
+
+      <Route element={<ProtectedRoute route="/login" />}>
+        <Route path="/" element={<Todo />} />
       </Route>
     </Routes>
   );

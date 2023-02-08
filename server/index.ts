@@ -10,8 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/tasks", async (req, res) => {
+app.get("/tasks/:userId", async (req, res) => {
+  const { userId } = req.params;
   const tasks = await prisma.task.findMany({
+    where: { userId },
     orderBy: {
       createdAt: "desc",
     },
@@ -52,7 +54,7 @@ app.delete("/tasks/:id", async (req, res) => {
     await prisma.task.delete({
       where: { id: id },
     });
-    res.status(200);
+    res.status(200).send();
   } catch (error) {
     res.status(404).json({
       error: "Task has not been deleted!",
@@ -99,7 +101,6 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     res.status(400).json({
       error: "Bad request",
@@ -112,7 +113,7 @@ app.post("/login", async (req, res) => {
 
   if (user) {
     if (user.password === password && user.email === email) {
-      res.status(201).json({
+      res.status(200).json({
         jwtFake: "Access-Allowed",
         name: user.name,
         userId: user.id,

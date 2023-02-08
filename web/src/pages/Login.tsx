@@ -7,7 +7,7 @@ import { useContextTodo } from '../context/context';
 type Props = {};
 
 const Login = (props: Props) => {
-  const { Login } = useContextTodo();
+  const { login } = useContextTodo();
   const {
     register,
     handleSubmit,
@@ -16,7 +16,7 @@ const Login = (props: Props) => {
   } = useForm();
 
   const onSubmit = (data: any) => {
-    Login(data);
+    login(data);
     reset();
   };
 

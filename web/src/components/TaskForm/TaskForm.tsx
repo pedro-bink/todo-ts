@@ -22,7 +22,7 @@ const TaskForm = (props: Props) => {
         Create your tasks here
       </h2>
       <form
-        className="flex flex-col gap-5 p-10 w-[600px]"
+        className="flex flex-col gap-5 p-10 max-w-[600px] w-[100%]"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col gap-2">

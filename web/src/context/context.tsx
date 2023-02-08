@@ -46,13 +46,13 @@ export function TodoProvider({ children }: Props) {
   const [authentication, setAuthentication] = useState<boolean>(false);
   const [userTasks, setUserTasks] = useState<ITodo[]>();
 
-  const api = 'http://localhost:3000';
+  const api = 'http://localhost:1/2400';
   const fetcher: Fetcher<ITodo[] | undefined> = () =>
     requestAPI.get('/tasks').then((response) => {
       return response.data;
     });
 
-  const { data, error, isLoading, mutate } = useSWR(`${api}/tasks`, fetcher);
+  const { data, mutate } = useSWR(`${api}/tasks`, fetcher);
 
   useEffect(() => {
     if (Cookies.get('authentication') === 'false') {
@@ -104,10 +104,13 @@ export function TodoProvider({ children }: Props) {
     const response = await requestAPI.post('/login', loginRequest);
 
     if (response.data) {
-      Cookies.set('userId', response.data.userId);
-      Cookies.set('jwtFake', response.data.jwtFake);
-      Cookies.set('name', response.data.name);
-      Cookies.set('authentication', 'true');
+      var date = new Date();
+      Cookies.set('userId', response.data.userId, {
+        expires: date.getTime() + 30 * 1000,
+      });
+      Cookies.set('jwtFake', response.data.jwtFake, { expires: 600 });
+      Cookies.set('name', response.data.name, { expires: 600 });
+      Cookies.set('authentication', 'true', { expires: 600 });
       setAuthentication(true);
       navigate('/todo');
     }

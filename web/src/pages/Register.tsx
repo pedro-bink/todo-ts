@@ -27,7 +27,7 @@ const Register = (props: Props) => {
 
         <div className="bg-stone-300 w-full h-[80vh] flex flex-col justify-center items-center">
           <form
-            className="flex flex-col gap-5 p-10 w-[600px]"
+            className="flex flex-col gap-5 p-10 max-w-[600px] w-[100%]"
             onSubmit={handleSubmit(onSubmit)}
           >
             <h1 className="text-3xl relative top-[-20px] font-bold text-sky-900">

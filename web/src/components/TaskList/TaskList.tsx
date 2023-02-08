@@ -52,7 +52,7 @@ const TaskList = (props: Props) => {
   return (
     <div className="">
       <Paper
-        className="max-w-3xl mx-auto my-3"
+        className="max-w-2xl mx-auto"
         sx={{ width: '100%', overflow: 'hidden' }}
       >
         <TableContainer>

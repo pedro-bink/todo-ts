@@ -22,9 +22,9 @@ const Header = (props: Props) => {
         </div>
       )}
 
-      <div className=" w-[80%]  flex justify-center items-center">
+      <div className="flex justify-center items-center ">
         <h1
-          className="text-3xl cursor-pointer"
+          className="cursor-pointer text-base md:text-2xl"
           onClick={() => navigate('/todo')}
         >
           React + TS Todo List

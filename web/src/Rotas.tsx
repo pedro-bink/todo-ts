@@ -7,7 +7,7 @@ import Login from './pages/Login';
 const Rotas = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" index element={<Login />} />
       <Route path="/register" element={<Register />} />
 
       <Route element={<ProtectedRoute route="/login" />}>
